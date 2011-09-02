@@ -16,7 +16,6 @@ Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snap
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires: python-sphinx >= 1.0
-BuildRequires: python-coverage python-webtest python-unittest2 python-pep8
 Requires: python-eventlet python-lxml python-paste python-paste-deploy python-paste-script python-sqlite2 python-sqlalchemy python-webob python-routes python-httplib2
 Requires: python-ldap
 Requires: python-memcached
@@ -71,6 +70,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - Use upstream snapshot tarball
 - No need to define python_sitelib anymore
 - BR python2-devel
+- Remove BRs only needed for unit tests
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
