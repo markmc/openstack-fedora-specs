@@ -1,3 +1,9 @@
 Fedora Cloud SIG's OpenStack packaging efforts:
 
   https://fedoraproject.org/wiki/OpenStack
+
+To generate a source RPM do e.g.
+
+  $> rpmbuild -bs --define "_sourcedir $(pwd)/SOURCES" --define "_specdir $(pwd)/SPECS" \
+                  --define "_builddir $(pwd)" --define "_srcrpmdir $(pwd)" \
+                  --define "_rpmdir $(pwd)" ./SPECS/openstack-keystone.spec
