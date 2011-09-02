@@ -51,6 +51,7 @@ Swift and Nova which are:
 %patch1 -p1
 
 sed -i 's|\(log_file = \)\(keystone.log\)|\1%{_localstatedir}/log/keystone/\2|' etc/keystone.conf
+sed -i 's|\(sql_connection = sqlite:///\)keystone.db|\1%{_sharedstatedir}/keystone/keystone.sqlite|' etc/keystone.conf
 
 find . \( -name .gitignore -o -name .placeholder \) -delete
 find keystone -name \*.py -exec sed -i '/\/usr\/bin\/env python/d' {} \;
@@ -110,6 +111,7 @@ exit 0
 - Add config file
 - Add keystone user and group
 - Ensure log file is in /var/log/keystone
+- Ensure the sqlite db is in /var/lib/keystone
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
