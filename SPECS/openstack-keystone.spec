@@ -10,7 +10,7 @@ Release:        0.2.%{milestone}.%{git_revno}%{?dist}
 Summary:        OpenStack Identity Service
 
 License:        ASL 2.0
-URL:            https://github.com/rackspace/keystone
+URL:            http://keystone.openstack.org/
 Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snaptag}.tar.gz
 
 BuildArch:      noarch
@@ -71,6 +71,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - BR python2-devel
 - Remove BRs only needed for unit tests
 - No need to clean buildroot in install anymore
+- Use slightly more canonical site for URL tag
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
