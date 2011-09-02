@@ -32,6 +32,8 @@ Requires:       python-sqlalchemy
 Requires:       python-sqlite2
 Requires:       python-webob
 
+Requires(pre):  shadow-utils
+
 %description
 Keystone is a proposed independent authentication service for
 OpenStack (http://www.openstack.org).
@@ -60,6 +62,7 @@ find examples -type f -exec chmod 0664 \{\} \;
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
 install -p -D -m 644 etc/keystone.conf %{buildroot}%{_sysconfdir}/keystone/keystone.conf
+install -d -m 755 %{buildroot}%{_sharedstatedir}/keystone
 
 rm -rf %{buildroot}%{python_sitelib}/tools
 rm -rf %{buildroot}%{python_sitelib}/examples
@@ -73,6 +76,13 @@ popd
 # Fix hidden-file-or-dir warnings
 rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 
+%pre
+getent group keystone >/dev/null || groupadd -r keystone
+getent passwd keystone >/dev/null || \
+useradd -r -g keystone -d %{_sharedstatedir}/keystone -s /sbin/nologin \
+-c "OpenStack Keystone Daemons" keystone
+exit 0
+
 %files
 %doc README.md
 %doc doc/build/html
@@ -81,6 +91,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 %{_bindir}/keystone*
 %dir %{_sysconfdir}/keystone
 %config(noreplace) %{_sysconfdir}/keystone/keystone.conf
+%dir %attr(-, keystone, keystone) %{_sharedstatedir}/keystone
 
 %changelog
 * Fri Sep  2 2011 Mark McLoughlin <markmc@redhat.com> - 1.0-0.2.d4.1078
@@ -93,6 +104,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - Prettify the requires tags
 - Cherry-pick tools.tracer patch from upstream
 - Add config file
+- Add keystone user and group
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
