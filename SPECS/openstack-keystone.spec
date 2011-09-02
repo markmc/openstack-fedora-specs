@@ -13,6 +13,7 @@ License:        ASL 2.0
 URL:            http://keystone.openstack.org/
 Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snaptag}.tar.gz
 Source1:        openstack-keystone.logrotate
+Source2:        openstack-keystone.service
 
 Patch1:         keystone-move-tools-tracer.patch
 Patch2:         keystone-logging-watched-file-handler.patch
@@ -34,7 +35,10 @@ Requires:       python-sqlalchemy
 Requires:       python-sqlite2
 Requires:       python-webob
 
-Requires(pre):  shadow-utils
+Requires(post):   systemd-units
+Requires(preun):  systemd-units
+Requires(postun): systemd-units
+Requires(pre):    shadow-utils
 
 %description
 Keystone is a proposed independent authentication service for
@@ -69,6 +73,7 @@ find examples -type f -exec chmod 0664 \{\} \;
 
 install -p -D -m 644 etc/keystone.conf %{buildroot}%{_sysconfdir}/keystone/keystone.conf
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/openstack-keystone
+install -p -D -m 644 %{SOURCE2} %{buildroot}%{_unitdir}/openstack-keystone.service
 install -d -m 755 %{buildroot}%{_sharedstatedir}/keystone
 install -d -m 755 %{buildroot}%{_localstatedir}/log/keystone
 
@@ -91,12 +96,33 @@ useradd -r -g keystone -d %{_sharedstatedir}/keystone -s /sbin/nologin \
 -c "OpenStack Keystone Daemons" keystone
 exit 0
 
+%post
+if [ $1 -eq 1 ] ; then
+    # Initial installation
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
+%preun
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable openstack-keystone.service > /dev/null 2>&1 || :
+    /bin/systemctl stop openstack-keystone.service > /dev/null 2>&1 || :
+fi
+
+%postun
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart openstack-keystone.service >/dev/null 2>&1 || :
+fi
+
 %files
 %doc README.md
 %doc doc/build/html
 %doc examples
 %{python_sitelib}/*
 %{_bindir}/keystone*
+%{_unitdir}/openstack-keystone.service
 %dir %{_sysconfdir}/keystone
 %config(noreplace) %{_sysconfdir}/keystone/keystone.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/openstack-keystone
@@ -118,6 +144,7 @@ exit 0
 - Ensure log file is in /var/log/keystone
 - Ensure the sqlite db is in /var/lib/keystone
 - Add logrotate support
+- Add system units
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
