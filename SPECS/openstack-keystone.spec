@@ -1,17 +1,18 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
-%global checkout 20110901git396f0bfd
+%global milestone d4
+%global git_revno 1078
+%global snapdate 20110823
+%global snaptag ~%{milestone}~%{snapdate}.%{git_revno}
 
 Name:           openstack-keystone
 Version:        1.0
-Release:        0.1.%{checkout}%{?dist}
+Release:        0.2.%{milestone}.%{git_revno}%{?dist}
 Summary:        OpenStack Identity Service
 
 License:        ASL 2.0
 URL:            https://github.com/rackspace/keystone
-# git builds
-# git archive --format=tar  --prefix=openstack-keystone/ HEAD | bzip2 -9 > ../openstack-keystone.tar.bz2
-Source0:        openstack-keystone-%{checkout}.tar.bz2
+Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snaptag}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python-devel
@@ -33,7 +34,7 @@ Swift and Nova which are:
 
 
 %prep
-%setup -q
+%setup -q -n keystone-%{version}
 
 find . \( -name .gitignore -o -name .placeholder \) -delete
 find keystone -name \*.py -exec sed -i '/\/usr\/bin\/env python/d' {} \;
@@ -59,7 +60,7 @@ popd
 rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 
 %files
-%doc LICENSE README.md
+%doc README.md
 %doc doc/build/html
 %doc examples
 %{python_sitelib}/*
@@ -67,5 +68,8 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 
 
 %changelog
+* Fri Sep  2 2011 Mark McLoughlin <markmc@redhat.com> - 1.0-0.2.d4.1078
+- Use upstream snapshot tarball
+
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
