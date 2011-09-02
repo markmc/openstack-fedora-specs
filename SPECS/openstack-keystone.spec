@@ -15,10 +15,20 @@ Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snap
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
-BuildRequires: python-sphinx >= 1.0
-Requires: python-eventlet python-lxml python-paste python-paste-deploy python-paste-script python-sqlite2 python-sqlalchemy python-webob python-routes python-httplib2
-Requires: python-ldap
-Requires: python-memcached
+BuildRequires:  python-sphinx >= 1.0
+
+Requires:       python-eventlet
+Requires:       python-httplib2
+Requires:       python-ldap
+Requires:       python-lxml
+Requires:       python-memcached
+Requires:       python-paste
+Requires:       python-paste-deploy
+Requires:       python-paste-script
+Requires:       python-routes
+Requires:       python-sqlalchemy
+Requires:       python-sqlite2
+Requires:       python-webob
 
 %description
 Keystone is a proposed independent authentication service for
@@ -72,6 +82,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - Remove BRs only needed for unit tests
 - No need to clean buildroot in install anymore
 - Use slightly more canonical site for URL tag
+- Prettify the requires tags
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
