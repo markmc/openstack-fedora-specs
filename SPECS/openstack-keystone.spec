@@ -50,6 +50,8 @@ Swift and Nova which are:
 
 %patch1 -p1
 
+sed -i 's|\(log_file = \)\(keystone.log\)|\1%{_localstatedir}/log/keystone/\2|' etc/keystone.conf
+
 find . \( -name .gitignore -o -name .placeholder \) -delete
 find keystone -name \*.py -exec sed -i '/\/usr\/bin\/env python/d' {} \;
 
@@ -63,6 +65,7 @@ find examples -type f -exec chmod 0664 \{\} \;
 
 install -p -D -m 644 etc/keystone.conf %{buildroot}%{_sysconfdir}/keystone/keystone.conf
 install -d -m 755 %{buildroot}%{_sharedstatedir}/keystone
+install -d -m 755 %{buildroot}%{_localstatedir}/log/keystone
 
 rm -rf %{buildroot}%{python_sitelib}/tools
 rm -rf %{buildroot}%{python_sitelib}/examples
@@ -92,6 +95,7 @@ exit 0
 %dir %{_sysconfdir}/keystone
 %config(noreplace) %{_sysconfdir}/keystone/keystone.conf
 %dir %attr(-, keystone, keystone) %{_sharedstatedir}/keystone
+%dir %attr(-, keystone, keystone) %{_localstatedir}/log/keystone
 
 %changelog
 * Fri Sep  2 2011 Mark McLoughlin <markmc@redhat.com> - 1.0-0.2.d4.1078
@@ -105,6 +109,7 @@ exit 0
 - Cherry-pick tools.tracer patch from upstream
 - Add config file
 - Add keystone user and group
+- Ensure log file is in /var/log/keystone
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
