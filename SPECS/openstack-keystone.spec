@@ -13,6 +13,8 @@ License:        ASL 2.0
 URL:            http://keystone.openstack.org/
 Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snaptag}.tar.gz
 
+Patch1:         keystone-move-tools-tracer.patch
+
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python-sphinx >= 1.0
@@ -43,6 +45,8 @@ Swift and Nova which are:
 
 %prep
 %setup -q -n keystone-%{version}
+
+%patch1 -p1
 
 find . \( -name .gitignore -o -name .placeholder \) -delete
 find keystone -name \*.py -exec sed -i '/\/usr\/bin\/env python/d' {} \;
@@ -83,6 +87,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - No need to clean buildroot in install anymore
 - Use slightly more canonical site for URL tag
 - Prettify the requires tags
+- Cherry-pick tools.tracer patch from upstream
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
