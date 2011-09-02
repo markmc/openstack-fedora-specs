@@ -1,4 +1,3 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 %global milestone d4
 %global git_revno 1078
@@ -70,6 +69,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 %changelog
 * Fri Sep  2 2011 Mark McLoughlin <markmc@redhat.com> - 1.0-0.2.d4.1078
 - Use upstream snapshot tarball
+- No need to define python_sitelib anymore
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
