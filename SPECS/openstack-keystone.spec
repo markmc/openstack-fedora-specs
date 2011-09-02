@@ -43,7 +43,6 @@ find keystone -name \*.py -exec sed -i '/\/usr\/bin\/env python/d' {} \;
 find examples -type f -exec chmod 0664 \{\} \;
 
 %install
-rm -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 rm -rf %{buildroot}%{python_sitelib}/tools
 rm -rf %{buildroot}%{python_sitelib}/examples
@@ -71,6 +70,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - No need to define python_sitelib anymore
 - BR python2-devel
 - Remove BRs only needed for unit tests
+- No need to clean buildroot in install anymore
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
