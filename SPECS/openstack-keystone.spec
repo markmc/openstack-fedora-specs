@@ -58,6 +58,9 @@ find examples -type f -exec chmod 0664 \{\} \;
 
 %install
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
+
+install -p -D -m 644 etc/keystone.conf %{buildroot}%{_sysconfdir}/keystone/keystone.conf
+
 rm -rf %{buildroot}%{python_sitelib}/tools
 rm -rf %{buildroot}%{python_sitelib}/examples
 rm -rf %{buildroot}%{python_sitelib}/doc
@@ -76,7 +79,8 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 %doc examples
 %{python_sitelib}/*
 %{_bindir}/keystone*
-
+%dir %{_sysconfdir}/keystone
+%config(noreplace) %{_sysconfdir}/keystone/keystone.conf
 
 %changelog
 * Fri Sep  2 2011 Mark McLoughlin <markmc@redhat.com> - 1.0-0.2.d4.1078
@@ -88,6 +92,7 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 - Use slightly more canonical site for URL tag
 - Prettify the requires tags
 - Cherry-pick tools.tracer patch from upstream
+- Add config file
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging
