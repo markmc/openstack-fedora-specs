@@ -12,8 +12,10 @@ Summary:        OpenStack Identity Service
 License:        ASL 2.0
 URL:            http://keystone.openstack.org/
 Source0:        http://keystone.openstack.org/tarballs/keystone-%{version}%{snaptag}.tar.gz
+Source1:        openstack-keystone.logrotate
 
 Patch1:         keystone-move-tools-tracer.patch
+Patch2:         keystone-logging-watched-file-handler.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -49,6 +51,7 @@ Swift and Nova which are:
 %setup -q -n keystone-%{version}
 
 %patch1 -p1
+%patch2 -p1
 
 sed -i 's|\(log_file = \)\(keystone.log\)|\1%{_localstatedir}/log/keystone/\2|' etc/keystone.conf
 sed -i 's|\(sql_connection = sqlite:///\)keystone.db|\1%{_sharedstatedir}/keystone/keystone.sqlite|' etc/keystone.conf
@@ -65,6 +68,7 @@ find examples -type f -exec chmod 0664 \{\} \;
 %{__python} setup.py install -O1 --skip-build --root %{buildroot}
 
 install -p -D -m 644 etc/keystone.conf %{buildroot}%{_sysconfdir}/keystone/keystone.conf
+install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/openstack-keystone
 install -d -m 755 %{buildroot}%{_sharedstatedir}/keystone
 install -d -m 755 %{buildroot}%{_localstatedir}/log/keystone
 
@@ -95,6 +99,7 @@ exit 0
 %{_bindir}/keystone*
 %dir %{_sysconfdir}/keystone
 %config(noreplace) %{_sysconfdir}/keystone/keystone.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/openstack-keystone
 %dir %attr(-, keystone, keystone) %{_sharedstatedir}/keystone
 %dir %attr(-, keystone, keystone) %{_localstatedir}/log/keystone
 
@@ -112,6 +117,7 @@ exit 0
 - Add keystone user and group
 - Ensure log file is in /var/log/keystone
 - Ensure the sqlite db is in /var/lib/keystone
+- Add logrotate support
 
 * Thu Sep  1 2011 Matt Domsch <Matt_Domsch@dell.com> - 1.0-0.1.20110901git396f0bfd%{?dist}
 - initial packaging

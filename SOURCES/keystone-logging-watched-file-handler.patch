@@ -1,0 +1,31 @@
+From: Mark McLoughlin <markmc@redhat.com>
+Subject: [PATCH] Use WatchedFileHandler to enable log rotation
+
+---
+ keystone/common/config.py |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/keystone/common/config.py b/keystone/common/config.py
+index 087831a..6a0a85a 100755
+--- a/keystone/common/config.py
++++ b/keystone/common/config.py
+@@ -21,6 +21,7 @@ Routines for configuring OpenStack Service
+ """
+ 
+ import logging.config
++import logging.handlers
+ import optparse
+ import os
+ from paste import deploy
+@@ -174,7 +175,7 @@ def setup_logging(options, conf):
+             logdir = conf.get('log_dir')
+         if logdir:
+             logfile = os.path.join(logdir, logfile)
+-        logfile = logging.FileHandler(logfile)
++        logfile = logging.handlers.WatchedFileHandler(logfile)
+         logfile.setFormatter(formatter)
+         root_logger.addHandler(logfile)
+         # Mirror to console if verbose or debug
+-- 
+1.7.4.4
+
